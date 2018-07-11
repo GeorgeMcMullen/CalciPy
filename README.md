@@ -8,37 +8,6 @@ One of the primary challenges in processing ratiometric data is that the two sig
 
 CalciPy's goal is to enable high throughput, yet customizable, processing of ratiometric calcium fluorescence data, in an open and autidible fashion. It can also serve as a starting point for processing data that is exported from microscopy imaging software, such as Nikon's NIS-Elements.
 
-## Methods
-Raw data is exported from software such as Nikon NIS-Elements into an Excel compatible file. See the samples directory for an example data set and format. As mentioned, the two signals which make up the ratiometric data are actually captured separately, represented as interpolated rows in a single dataset, and it is not defined which set of interpolated rows corresponds to what part of the ratio.
-
-![1 - Original Data](Documentation/Images/1%20-%20Original%20Data.png "1 - Original Data")
-
-To overcome this challenge, the script will analyze different combinations of the data, comparing it with an expected sharp rise and slow(er) decay, typical of calcium fluorescence. The script does this by iterating over the captured cell lines and subtract background noise (which should also be captured as the last cell line/column).
-
-![2 - Background Signal Reduced](Documentation/Images/2%20-%20Background%20Signal%20Reduced.png "2 - Background Signal Reduced")
-
-Next it de-interpolates the rows to capture the individual signals. At this stage it is not known which signal represents which wavelength of data.
-
-![3a - De-interpolated Signal Data (Unknown Wavelength)](Documentation/Images/3a%20-%20De-interpolated%20Signal%20Data%20(Unknown%20Wavelength).png "3a - De-interpolated Signal Data (Unknown Wavelength)") ![3b - De-interpolated Signal Data (Unknown Wavelength)](Documentation/Images/3b%20-%20De-interpolated%20Signal%20Data%20(Unknown%20Wavelength).png "3b - De-interpolated Signal Data (Unknown Wavelength)") 
-
-It will divide these two separate signals by eachother to calculate two ratiometric signals, which are purely the inverse of eachother.
-
-![4a - Ratiometric Signal (Chosen)](Documentation/Images/4a%20-%20Ratiometric%20Signal%20(Chosen).png "4a - Ratiometric Signal (Chosen)") ![4b - Ratiometric Signal (Discarded)](Documentation/Images/4b%20-%20Ratiometric%20Signal%20(Discarded).png "4b - Ratiometric Signal (Discarded)") 
-
-The script then uses look-ahead peak detection to determine local maxima and minima. These detected peaks are used to calculate rise and decay times and identify which combination of rows presents the correct ratio.
-
-![6 - Peak Detection](Documentation/Images/6%20-%20Peak%20Detection.png "6 - Peak Detection")
-
-A centered window moving average is applied to the decay data only (each individual set of maximum to minimum), slightly smoothing the signal to obtain more consistent initial values for curve fitting. Python’s curve fitting functions found in SciPy are then used with an exponential decay function to establish the signal’s parameters, most significantly the decay rate (which can also be used to calculate Tau).
-
-![7 - Curve Fitting (Amplitude Range 85-10)](Documentation/Images/7%20-%20Curve%20Fitting%20(Amplitude%20Range%2085-10).png "7 - Curve Fitting (Amplitude Range 85-10)")
-
-The original signal, peaks, fitted curve results, and marker for the position of Tau are then plotted and exported as PDFs for easy visual review.
-
-![8 - Tau Marker Placement](Documentation/Images/8%20-%20Tau%20Marker%20Placement.png "8 - Tau Marker Placement")
-
-In addition, calculated results for rate constant, Tau, decay time, amplitude, diastolic, beat rate, beat variation, and velocity are all outputted to a comma separated value text file (CSV) for further analysis. The script can be configured with different peak detection look-ahead windows, amplitude windows, background noise reduction, smoothing filters and more, and has shown consistent results even when run against noisy or arrhythmic signals. 
-
 ## Requirements, Dependencies, and Installation
 CalciPy expects that the input file is an Excel file containing ratiometric calcium fluorescent data, which is in the same structure that software packages like Nikon NIS-Elements exports data. See the samples directory for more information.
 
@@ -92,6 +61,36 @@ CalciPy can be run simply by providing the path to the input file as a command l
       --ymin YMIN           Y-axis minimum
       --show                show the graph (with matplotlib)
 
+## Methods
+Raw data is exported from software such as Nikon NIS-Elements into an Excel compatible file. See the samples directory for an example data set and format. As mentioned, the two signals which make up the ratiometric data are actually captured separately, represented as interpolated rows in a single dataset, and it is not defined which set of interpolated rows corresponds to what part of the ratio.
+
+![1 - Original Data](Documentation/Images/1%20-%20Original%20Data.png "1 - Original Data")
+
+To overcome this challenge, the script will analyze different combinations of the data, comparing it with an expected sharp rise and slow(er) decay, typical of calcium fluorescence. The script does this by first iterating over the captured cell lines and subtracting background noise (which should also be captured as the last cell line/column).
+
+![2 - Background Signal Reduced](Documentation/Images/2%20-%20Background%20Signal%20Reduced.png "2 - Background Signal Reduced")
+
+Next it de-interpolates the rows to capture the individual signals. At this stage it is not known which signal represents which wavelength of data.
+
+![3a - De-interpolated Signal Data (Unknown Wavelength)](Documentation/Images/3a%20-%20De-interpolated%20Signal%20Data%20(Unknown%20Wavelength).png "3a - De-interpolated Signal Data (Unknown Wavelength)") ![3b - De-interpolated Signal Data (Unknown Wavelength)](Documentation/Images/3b%20-%20De-interpolated%20Signal%20Data%20(Unknown%20Wavelength).png "3b - De-interpolated Signal Data (Unknown Wavelength)") 
+
+It will divide these two separate signals by eachother to calculate two ratiometric signals, which are purely the inverse of eachother.
+
+![4a - Ratiometric Signal (Chosen)](Documentation/Images/4a%20-%20Ratiometric%20Signal%20(Chosen).png "4a - Ratiometric Signal (Chosen)") ![4b - Ratiometric Signal (Discarded)](Documentation/Images/4b%20-%20Ratiometric%20Signal%20(Discarded).png "4b - Ratiometric Signal (Discarded)") 
+
+The script then uses look-ahead peak detection to determine local maxima and minima. These detected peaks are used to calculate rise and decay times and identify which combination of rows presents the correct ratio.
+
+![6 - Peak Detection](Documentation/Images/6%20-%20Peak%20Detection.png "6 - Peak Detection")
+
+A centered window moving average is applied to the decay data only (each individual set of maximum to minimum), slightly smoothing the signal to obtain more consistent initial values for curve fitting. Python’s curve fitting functions found in SciPy are then used with an exponential decay function to establish the signal’s parameters, most significantly the decay rate (which can also be used to calculate Tau).
+
+![7 - Curve Fitting (Amplitude Range 85-10)](Documentation/Images/7%20-%20Curve%20Fitting%20(Amplitude%20Range%2085-10).png "7 - Curve Fitting (Amplitude Range 85-10)")
+
+The original signal, peaks, fitted curve results, and marker for the position of Tau are then plotted and exported as PDFs for easy visual review.
+
+![8 - Tau Marker Placement](Documentation/Images/8%20-%20Tau%20Marker%20Placement.png "8 - Tau Marker Placement")
+
+In addition, calculated results for rate constant, Tau, decay time, amplitude, diastolic, beat rate, beat variation, and velocity are all outputted to a comma separated value text file (CSV) for further analysis. The script can be configured with different peak detection look-ahead windows, amplitude windows, background noise reduction, smoothing filters and more, and has shown consistent results even when run against noisy or arrhythmic signals. 
 
 ## Caveats and Troubleshooting
 This software comes without any warrantee or guarantee. While it has shown to provide consistent results, even when run against noisy or arrhythmic signals, verification is still encouraged. Below are some notes of what to look out for during the verification process.
