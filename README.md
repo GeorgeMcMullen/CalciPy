@@ -19,7 +19,7 @@ The script requires Python (v2.7 at least). Furthermore, the following Python li
 - matplotlib                      
 - analytic-wfm
 
-Other than that, the script can be run as is when downloaded as a signle file.                  
+Other than that, the script can be run as is when downloaded as a single file.                  
 
 ## Running / Command Line Arguments
 CalciPy can be run simply by providing the path to the input file as a command line argument.
