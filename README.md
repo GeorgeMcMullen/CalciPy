@@ -1,5 +1,5 @@
 # CalciPy: A Python script for processing ratiometric calcium fluorescence data
-One of the primary challenges in processing ratiometric data is that the two signals which make up the ratiometric data are actually captured separately, and it is not known which is which. CalciPy processes interpolated calcium fluorescence wavelength data, identifies the proper ratio sequence, and calculates metrics from the resulting signal. See below for more detail. While there is a variety of software for processing calcium fluorescence data, each of them have one or more shortcomings, such as:
+One of the primary challenges in processing ratiometric data is that the two signals which make up the ratiometric data are actually captured separately, and it is not known which is which. CalciPy processes interlaced calcium fluorescence wavelength data, identifies the proper ratio sequence, and calculates metrics from the resulting signal. See below for more detail. While there is a variety of software for processing calcium fluorescence data, each of them have one or more shortcomings, such as:
 
 - Few solutions actually process ratiometric data provided by two wavelengths of light
 - Some require manual effort to determine the proper ratio and subsequent calculations
@@ -62,7 +62,7 @@ CalciPy can be run simply by providing the path to the input file as a command l
       --show                show the graph (with matplotlib)
 
 ## Methods
-Raw data is exported from software such as Nikon NIS-Elements into an Excel compatible file. See the samples directory for an example data set and format. As mentioned, the two signals which make up the ratiometric data are actually captured separately, represented as interpolated rows in a single dataset, and it is not defined which set of interpolated rows corresponds to what part of the ratio.
+Raw data is exported from software such as Nikon NIS-Elements into an Excel compatible file. See the samples directory for an example data set and format. As mentioned, the two signals which make up the ratiometric data are actually captured separately, represented as interlaced rows in a single dataset, and it is not defined which set of interlaced rows corresponds to what part of the ratio.
 
 ![1 - Original Data](Documentation/Images/1%20-%20Original%20Data.png "1 - Original Data")
 
@@ -70,9 +70,9 @@ To overcome this challenge, the script will analyze different combinations of th
 
 ![2 - Background Signal Reduced](Documentation/Images/2%20-%20Background%20Signal%20Reduced.png "2 - Background Signal Reduced")
 
-Next it de-interpolates the rows to capture the individual signals. At this stage it is not known which signal represents which wavelength of data.
+Next it de-interlaces the rows to capture the individual signals. At this stage it is not known which signal represents which wavelength of data.
 
-![3a - De-interpolated Signal Data (Unknown Wavelength)](Documentation/Images/3a%20-%20De-interpolated%20Signal%20Data%20(Unknown%20Wavelength).png "3a - De-interpolated Signal Data (Unknown Wavelength)") ![3b - De-interpolated Signal Data (Unknown Wavelength)](Documentation/Images/3b%20-%20De-interpolated%20Signal%20Data%20(Unknown%20Wavelength).png "3b - De-interpolated Signal Data (Unknown Wavelength)") 
+![3a - De-interlaced Signal Data (Unknown Wavelength)](Documentation/Images/3a%20-%20De-interpolated%20Signal%20Data%20(Unknown%20Wavelength).png "3a - De-interlaced Signal Data (Unknown Wavelength)") ![3b - De-interlaced Signal Data (Unknown Wavelength)](Documentation/Images/3b%20-%20De-interpolated%20Signal%20Data%20(Unknown%20Wavelength).png "3b - De-interlaced Signal Data (Unknown Wavelength)") 
 
 It will divide these two separate signals by eachother to calculate two ratiometric signals, which are purely the inverse of eachother.
 
