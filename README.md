@@ -100,7 +100,7 @@ This software comes without any warrantee or guarantee. While it has shown to pr
 - If you see that the larger peaks are detected along side very small peaks, test out different --lookahead and --delta parameters
 - The same should be true for if the script is not able to provide the correct ratio. To force the script to invert the ratios, use the --invert option.
 - High precision microscopy instruments can sometimes lose focus or become otherwise uncalibrated over time, due to environmental factors such as temperature or humidity. Use the --limit option to only process a subset of the data.
-- Some code is not implemented in the most performance or elegant manner possible. One reason for this is so that is a little easier for those who are new to Python and haven't learned all its powerful capabilities with handling data.
+- Some code is not implemented in the most performant or elegant manner possible. One reason for this is so that is a little easier for those who are new to Python and haven't learned all its powerful capabilities with handling data.
 
 ## Special Thanks
 I'd like to thank the following people at the Stanford Cardiovascular Institute who provided data, feedback, and guidance while this script was being written.
