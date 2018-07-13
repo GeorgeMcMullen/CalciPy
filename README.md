@@ -107,6 +107,6 @@ I'd like to thank the following people at the Stanford Cardiovascular Institute 
 
 - Rajani Shrestha, Research Associate
 - Timon Seeger, MD / Postdoctoral Fellow
-- Lam C. Keung, PhD
+- Chi Keung Lam, PhD
 - Ioannis Karakikes, PhD
 
