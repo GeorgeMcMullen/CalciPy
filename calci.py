@@ -145,6 +145,18 @@ def getDecayTimes(timeArray, minima, maxima):
 #
 # chooseRatio(dataArray, timeArray)
 #
+# This is a generic method for choosing the ratio, based on the command line
+# argument. It will merely call the other functions.
+#
+def chooseRatio(dataArray, timeArray):
+    if chooseRatioBy == 'time':
+       return chooseRatioByTime(dataArray, timeArray)
+    else:
+       return chooseRatioByAmplitude(dataArray, timeArray)
+
+#
+# chooseRatioByTime(dataArray, timeArray)
+#
 # Since the data contains two different ratios, we need to choose which is the correct one to use.
 # The correct ratio signal should have a fast upstroke and slower, exponential decay.
 # This function will check to see if the rise is faster, on average, than the decay.
@@ -153,7 +165,7 @@ def getDecayTimes(timeArray, minima, maxima):
 # see if there are are more datapoints at the lower end of the amplitude vs. the
 # higher end. That is not currently implemented.
 #
-def chooseRatio(dataArray, timeArray):
+def chooseRatioByTime(dataArray, timeArray):
     # Create an array which will store the ratios between the two
     # different nm frequencies of light, which are on every other row
     # in each column. It is not known which row is which.
@@ -188,6 +200,41 @@ def chooseRatio(dataArray, timeArray):
             ratio = testRatioArray1
 
     return ratio
+
+#
+# chooseRatioByAmplitude(dataArray, timeArray)
+#
+# Data that has a sharp excitation phase and an exponential decay phase should
+# have more data points residing towards the minimum, and less at the maximum.
+# We can use this information to determine which ratio to use.
+# 
+# TODO: This function could be refinemd so that it looks at individual sets of wavelets
+#
+def chooseRatioByAmplitude(dataArray, timeArray):
+    # Create an array which will store the ratios between the two
+    # different nm frequencies of light, which are on every other row
+    # in each column. It is not known which row is which.
+    # The ratio array starts out as being half as tall and twice as wide
+    # as the original data array because the data is no longer interlaced.
+    # TODO: We will need to make sure that there is an even number of rows or this step will fail
+    testRatioArray1 = dataArray[0::2] / dataArray[1::2]
+    testRatioArray2 = dataArray[1::2] / dataArray[0::2]
+
+    ratioMax = max(testRatioArray1)
+    ratioMin = min(testRatioArray1)
+    
+    if sum(1 for i in testRatioArray1 if numpy.abs(i-ratioMin) < numpy.abs(i-ratioMax)) > (len(testRatioArray1) / 2.0):
+       if invertWaveForm == False:
+          return testRatioArray1
+       else:
+          return testRatioArray2
+    else:
+       if invertWaveForm == False:
+          return testRatioArray2
+       else:
+          return testRatioArray1
+
+
 
 #
 # smoothBetweenPeaks(dataArray, minima, maxima)
@@ -576,6 +623,7 @@ argumentParser.add_argument('--lookahead', type=positiveInteger, default=30, hel
 argumentParser.add_argument('--delta',     type=positiveFloat, default=0.0,  help='peak detection delta parameter (default=0)')
 
 argumentParser.add_argument('--invert', action='store_true', help='invert the waveform (special cases only)')
+argumentParser.add_argument('--ratioby', choices=['time', 'amplitude'], default='time',  help='method for choosing which ratio to use')
 
 argumentParser.add_argument('--decaystart', type=floatInRange, default=1.0, help='the relative amplitude from the peak where the analysis will start')
 argumentParser.add_argument('--decayend',   type=floatInRange, default=0.0, help='the relative amplitude from the peak where the analysis will end')
@@ -638,6 +686,7 @@ peakDetectLookAhead = commandArguments.lookahead
 peakDetectDelta = commandArguments.delta
 
 invertWaveForm = commandArguments.invert
+chooseRatioBy = commandArguments.ratioby
 
 rangeLimit = commandArguments.limit
 
