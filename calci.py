@@ -105,8 +105,27 @@ def getMinMax(dataArray):
     while (len(minima) > len(maxima)):
         minima = minima[:-1]
 
+    # A good signal shouldn't have only a single peak with no minimum,
+    # if it does this will add a minimum point for the smallest value after
+    # the peak. This will prevent some empty trace errors for an otherwise
+    # unusable result set.
+    if len(maxima) == 1 and len(minima) == 0:
+       lastMinimum=getIndexAtAmplitude(dataArray[maxima[0]:], 0, True)
+       minima.append(maxima[0]+lastMinimum)
+
+    # We need the maxima and minima to be the same size to we don't get any out of bounds errors
     while (len(minima) < len(maxima)):
         maxima = maxima[:-1]
+
+    # If it's a really noisy signal, where no peaks could be detected, the following
+    # will place a peak where the max value is and a minimum at the lowest value after
+    # that peak. This will prevent some other empty trace errors for an otherwise
+    # unusable result set.
+    if len(maxima) == 0 and len(minima) == 0:
+       print 'yes'
+       maxima.append(numpy.argmax(dataArray[:-2]))
+       lastMinimum=getIndexAtAmplitude(dataArray[maxima[0]:], 0, True)
+       minima.append(maxima[0]+lastMinimum)
 
     return [minima, maxima]
 
@@ -207,7 +226,7 @@ def chooseRatioByTime(dataArray, timeArray):
 # Data that has a sharp excitation phase and an exponential decay phase should
 # have more data points residing towards the minimum, and less at the maximum.
 # We can use this information to determine which ratio to use.
-# 
+#
 # TODO: This function could be refinemd so that it looks at individual sets of wavelets
 #
 def chooseRatioByAmplitude(dataArray, timeArray):
@@ -222,7 +241,7 @@ def chooseRatioByAmplitude(dataArray, timeArray):
 
     ratioMax = max(testRatioArray1)
     ratioMin = min(testRatioArray1)
-    
+
     if sum(1 for i in testRatioArray1 if numpy.abs(i-ratioMin) < numpy.abs(i-ratioMax)) > (len(testRatioArray1) / 2.0):
        if invertWaveForm == False:
           return testRatioArray1
