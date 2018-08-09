@@ -27,10 +27,13 @@ CalciPy can be run simply by providing the path to the input file as a command l
     usage: calci.py [-h] [-O OUTPUTDIR] [--sheetname SHEETNAME]
                     [--sheetnum SHEETNUM] [--column COLUMN]
                     [--bgreduce {average,point,none}] [--lookahead LOOKAHEAD]
-                    [--delta DELTA] [--invert] [--limit LIMIT]
-                    [--decaystart DECAYSTART] [--decayend DECAYEND] [--ymax YMAX]
-                    [--ymin YMIN] [--show]
+                    [--delta DELTA] [--invert] [--ratioby {time,amplitude}]
+                    [--decaystart DECAYSTART] [--decayend DECAYEND] [--bounds]
+                    [--limit LIMIT] [--ymax YMAX] [--ymin YMIN] [--xmax XMAX]
+                    [--xmin XMIN] [--show] [--verbose]
                     filename
+    
+    Process ratiometric calcium fluorescence decay data.
     
     positional arguments:
       filename              input filename to process
@@ -50,16 +53,23 @@ CalciPy can be run simply by providing the path to the input file as a command l
                             peak detection look-ahead parameter (default=30)
       --delta DELTA         peak detection delta parameter (default=0)
       --invert              invert the waveform (special cases only)
-      --limit LIMIT         limit processing to the first X wavelets (default=0 as
-                            disabled)
+      --ratioby {time,amplitude}
+                            method for choosing which ratio to use
       --decaystart DECAYSTART
                             the relative amplitude from the peak where the
                             analysis will start
       --decayend DECAYEND   the relative amplitude from the peak where the
                             analysis will end
+      --bounds              bound the solution to non-negative numbers, around the
+                            start/end values of the waveform
+      --limit LIMIT         limit processing to the first X wavelets (default=0 as
+                            disabled)
       --ymax YMAX           Y-axis maximum
       --ymin YMIN           Y-axis minimum
+      --xmax XMAX           X-axis maximum
+      --xmin XMIN           X-axis minimum
       --show                show the graph (with matplotlib)
+      --verbose             print values as they are calculated
 
 ## Methods
 Raw data is exported from software such as Nikon NIS-Elements into an Excel compatible file. See the samples directory for an example data set and format. As mentioned, the two signals which make up the ratiometric data are actually captured separately, represented as interlaced rows in a single dataset, and it is not defined which set of interlaced rows corresponds to what part of the ratio.
