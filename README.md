@@ -102,7 +102,7 @@ To overcome this challenge, the script will analyze different combinations of th
 
 Next it de-interlaces the rows to capture the individual signals. At this stage it is not known which signal represents which wavelength of data.
 
-![3a - De-interlaced Signal Data (Unknown Wavelength)](Documentation/Images/3a%20-%20De-interpolated%20Signal%20Data%20(Unknown%20Wavelength).png "3a - De-interlaced Signal Data (Unknown Wavelength)") ![3b - De-interlaced Signal Data (Unknown Wavelength)](Documentation/Images/3b%20-%20De-interpolated%20Signal%20Data%20(Unknown%20Wavelength).png "3b - De-interlaced Signal Data (Unknown Wavelength)") 
+![3a - De-interlaced Signal Data (Unknown Wavelength)](Documentation/Images/3a%20-%20De-interlaced%20Signal%20Data%20(Unknown%20Wavelength).png "3a - De-interlaced Signal Data (Unknown Wavelength)") ![3b - De-interlaced Signal Data (Unknown Wavelength)](Documentation/Images/3b%20-%20De-interlaced%20Signal%20Data%20(Unknown%20Wavelength).png "3b - De-interlaced Signal Data (Unknown Wavelength)") 
 
 It will divide these two separate signals by eachother to calculate two ratiometric signals, which are purely the inverse of eachother.
 
