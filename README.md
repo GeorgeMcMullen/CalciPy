@@ -22,7 +22,27 @@ The script requires Python (v2.7 at least). Furthermore, the following Python li
 Other than that, the script can be run as is when downloaded as a single file.                  
 
 ## Running / Command Line Arguments
-CalciPy can be run simply by providing the path to the input file as a command line argument.
+CalciPy can be run simply by providing the path to the input file as a command line argument. For example:
+
+    python calci.py PATH/TO/EXCEL_FILE.xlsx
+
+Additional common examples are as follows. After running the script, you can see the output PDF files and CSV files to determine if you need to add more parameters. If you'd like to output the files to a different directory, use the -O option as follows:
+
+    python calci.py -O PATH/TO/OUTPUT_DIRECTORY PATH/TO/EXCEL_FILE.xlsx
+
+If you find that there are more (or fewer) peaks being detected than should be, adjust the look-ahead and delta parameters as below. The look-ahead parameter indicates how far apart (in terms of the number of datapoints - not the amount of time) each peak should be detected. The delta parameter indicates how large of a change in amplitude will be used to identify a peak. It's often best to start by adjusting the look-ahead parameter first, and then adjusting the delta parameter if further refinement is needed.
+
+    python calci.py --lookahead 45 --delta .25 -O PATH/TO/OUTPUT_DIRECTORY PATH/TO/EXCEL_FILE.xlsx
+
+Sometimes, you may want to analyze only a portion of a decaying signal. This may be the case if you feel that the signal may be too noisy on the peaks, or if you expect some kind of latency in the signal. You can indicate where the processing of the signal should take place, by percentage of the amplitude. Common paramters in this case are to use 75-25 or 85-10 as follows:
+
+    python calci.py --decaystart .85 --decayend .10 --lookahead 45 --delta .25 -O PATH/TO/OUTPUT_DIRECTORY PATH/TO/EXCEL_FILE.xlsx
+
+Curve fitting is, by nature, not exact. When you review the CSV file, you may find that the values for Y0, A, RC, and Tau to be way off your expected results, with very large values for A and very small values (or even negative values) for Y0. The script has the capability to apply some rudementary bounds to the curve fitting process which will limit the outputted values, similar to how Excel's solver can limit output to non-negative values only. This is done with the bounds parameter.
+
+    python calci.py --decaystart .85 --decayend .10 --lookahead 45 --delta .25 -O PATH/TO/OUTPUT_DIRECTORY PATH/TO/EXCEL_FILE.xlsx
+
+Below is a full list of all the command line arguments that can be used.
 
     usage: calci.py [-h] [-O OUTPUTDIR] [--sheetname SHEETNAME]
                     [--sheetnum SHEETNUM] [--column COLUMN]
@@ -64,10 +84,10 @@ CalciPy can be run simply by providing the path to the input file as a command l
                             start/end values of the waveform
       --limit LIMIT         limit processing to the first X wavelets (default=0 as
                             disabled)
-      --ymax YMAX           Y-axis maximum
-      --ymin YMIN           Y-axis minimum
-      --xmax XMAX           X-axis maximum
-      --xmin XMIN           X-axis minimum
+      --ymax YMAX           Output graph Y-axis maximum
+      --ymin YMIN           Output graph Y-axis minimum
+      --xmax XMAX           Output graph X-axis maximum
+      --xmin XMIN           Output graph X-axis minimum
       --show                show the graph (with matplotlib)
       --verbose             print values as they are calculated
 
@@ -111,6 +131,7 @@ This software comes without any warrantee or guarantee. While it has shown to pr
 - The same should be true for if the script is not able to provide the correct ratio. To force the script to invert the ratios, use the --invert option.
 - High precision microscopy instruments can sometimes lose focus or become otherwise uncalibrated over time, due to environmental factors such as temperature or humidity. Use the --limit option to only process a subset of the data.
 - Some code is not implemented in the most performant or elegant manner possible. One reason for this is so that is a little easier for those who are new to Python and haven't learned all its powerful capabilities with handling data.
+- Different versions of Python, with different versions of scipy, and even different computers may output different curve fit parameters for the same input data. In that case, your own judgement should be used to determine if the output is close enough to be considered accurate.
 
 ## Special Thanks
 I'd like to thank the following people at the Stanford Cardiovascular Institute who provided data, feedback, and guidance while this script was being written.
@@ -119,4 +140,3 @@ I'd like to thank the following people at the Stanford Cardiovascular Institute 
 - Timon Seeger, MD / Postdoctoral Fellow
 - Chi Keung Lam, PhD
 - Ioannis Karakikes, PhD
-
