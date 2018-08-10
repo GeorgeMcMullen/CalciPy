@@ -44,7 +44,7 @@ Curve fitting is, by nature, not exact. When you review the CSV file, you may fi
 
 If you'd like to view the output graphs interactively, use the show parameter. This is helpful when checking the individual values for peaks and allows you to zoom into each graph. This is facilitated by matplotlib.
 
-    python calci.py --bounds --decaystart .85 --decayend .10 --lookahead 45 --delta .25 -O PATH/TO/OUTPUT_DIRECTORY PATH/TO/EXCEL_FILE.xlsx
+    python calci.py --show --bounds --decaystart .85 --decayend .10 --lookahead 45 --delta .25 -O PATH/TO/OUTPUT_DIRECTORY PATH/TO/EXCEL_FILE.xlsx
 
 Below is a full list of all the command line arguments that can be used.
 
