@@ -88,10 +88,10 @@ Below is a full list of all the command line arguments that can be used.
                             start/end values of the waveform
       --limit LIMIT         limit processing to the first X wavelets (default=0 as
                             disabled)
-      --ymax YMAX           Output graph Y-axis maximum
-      --ymin YMIN           Output graph Y-axis minimum
-      --xmax XMAX           Output graph X-axis maximum
-      --xmin XMIN           Output graph X-axis minimum
+      --ymax YMAX           output graph Y-axis maximum
+      --ymin YMIN           output graph Y-axis minimum
+      --xmax XMAX           output graph X-axis maximum
+      --xmin XMIN           output graph X-axis minimum
       --show                show the graph (with matplotlib)
       --verbose             print values as they are calculated
 

@@ -650,11 +650,11 @@ argumentParser.add_argument('--bounds', action='store_true', help='bound the sol
 
 argumentParser.add_argument('--limit', type=positiveInteger, help='limit processing to the first X wavelets (default=0 as disabled)')
 
-argumentParser.add_argument('--ymax', type=float, help='Output graph Y-axis maximum')
-argumentParser.add_argument('--ymin', type=float, help='Output graph Y-axis minimum')
+argumentParser.add_argument('--ymax', type=float, help='output graph Y-axis maximum')
+argumentParser.add_argument('--ymin', type=float, help='output graph Y-axis minimum')
 
-argumentParser.add_argument('--xmax', type=float, help='Output graph X-axis maximum')
-argumentParser.add_argument('--xmin', type=float, help='Output graph X-axis minimum')
+argumentParser.add_argument('--xmax', type=float, help='output graph X-axis maximum')
+argumentParser.add_argument('--xmin', type=float, help='output graph X-axis minimum')
 
 argumentParser.add_argument('--show', action='store_true', help='show the graph (with matplotlib)')
 
