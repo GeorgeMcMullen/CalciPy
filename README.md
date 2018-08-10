@@ -40,7 +40,7 @@ Sometimes, you may want to analyze only a portion of a decaying signal. This may
 
 Curve fitting is, by nature, not exact. When you review the CSV file, you may find that the values for Y0, A, RC, and Tau to be way off your expected results, with very large values for A and very small values (or even negative values) for Y0. The script has the capability to apply some rudementary bounds to the curve fitting process which will limit the outputted values, similar to how Excel's solver can limit output to non-negative values only. This is done with the bounds parameter.
 
-    python calci.py --decaystart .85 --decayend .10 --lookahead 45 --delta .25 -O PATH/TO/OUTPUT_DIRECTORY PATH/TO/EXCEL_FILE.xlsx
+    python calci.py --bounds --decaystart .85 --decayend .10 --lookahead 45 --delta .25 -O PATH/TO/OUTPUT_DIRECTORY PATH/TO/EXCEL_FILE.xlsx
 
 Below is a full list of all the command line arguments that can be used.
 
