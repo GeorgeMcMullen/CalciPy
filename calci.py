@@ -122,7 +122,6 @@ def getMinMax(dataArray):
     # that peak. This will prevent some other empty trace errors for an otherwise
     # unusable result set.
     if len(maxima) == 0 and len(minima) == 0:
-       print 'yes'
        maxima.append(numpy.argmax(dataArray[:-2]))
        lastMinimum=getIndexAtAmplitude(dataArray[maxima[0]:], 0, True)
        minima.append(maxima[0]+lastMinimum)
@@ -651,11 +650,11 @@ argumentParser.add_argument('--bounds', action='store_true', help='bound the sol
 
 argumentParser.add_argument('--limit', type=positiveInteger, help='limit processing to the first X wavelets (default=0 as disabled)')
 
-argumentParser.add_argument('--ymax', type=float, help='Y-axis maximum')
-argumentParser.add_argument('--ymin', type=float, help='Y-axis minimum')
+argumentParser.add_argument('--ymax', type=float, help='Output graph Y-axis maximum')
+argumentParser.add_argument('--ymin', type=float, help='Output graph Y-axis minimum')
 
-argumentParser.add_argument('--xmax', type=float, help='X-axis maximum')
-argumentParser.add_argument('--xmin', type=float, help='X-axis minimum')
+argumentParser.add_argument('--xmax', type=float, help='Output graph X-axis maximum')
+argumentParser.add_argument('--xmin', type=float, help='Output graph X-axis minimum')
 
 argumentParser.add_argument('--show', action='store_true', help='show the graph (with matplotlib)')
 
