@@ -11,7 +11,7 @@ CalciPy's goal is to enable high throughput, yet customizable, processing of rat
 ## Requirements, Dependencies, and Installation
 CalciPy expects that the input file is an Excel file containing ratiometric calcium fluorescent data, which is in the same structure that software packages like Nikon NIS-Elements exports data. See the samples directory for more information.
 
-The script requires Python (v2.7 at least). Furthermore, the following Python libraries are required and can be installed with Pip.
+The script requires Python 2 (v2.7 at least, Python 3 has not been tested yet). Furthermore, the following Python libraries are required and can be installed with Pip.
 
 - openpyxl
 - numpy                                                                      
@@ -39,6 +39,10 @@ Sometimes, you may want to analyze only a portion of a decaying signal. This may
     python calci.py --decaystart .85 --decayend .10 --lookahead 45 --delta .25 -O PATH/TO/OUTPUT_DIRECTORY PATH/TO/EXCEL_FILE.xlsx
 
 Curve fitting is, by nature, not exact. When you review the CSV file, you may find that the values for Y0, A, RC, and Tau to be way off your expected results, with very large values for A and very small values (or even negative values) for Y0. The script has the capability to apply some rudementary bounds to the curve fitting process which will limit the outputted values, similar to how Excel's solver can limit output to non-negative values only. This is done with the bounds parameter.
+
+    python calci.py --bounds --decaystart .85 --decayend .10 --lookahead 45 --delta .25 -O PATH/TO/OUTPUT_DIRECTORY PATH/TO/EXCEL_FILE.xlsx
+
+If you'd like to view the output graphs interactively, use the show parameter. This is helpful when checking the individual values for peaks and allows you to zoom into each graph. This is facilitated by matplotlib.
 
     python calci.py --bounds --decaystart .85 --decayend .10 --lookahead 45 --delta .25 -O PATH/TO/OUTPUT_DIRECTORY PATH/TO/EXCEL_FILE.xlsx
 
@@ -125,13 +129,16 @@ In addition, calculated results for rate constant, Tau, decay time, amplitude, d
 ## Caveats and Troubleshooting
 This software comes without any warrantee or guarantee. While it has shown to provide consistent results, even when run against noisy or arrhythmic signals, verification is still encouraged. Below are some notes of what to look out for during the verification process.
 
+- Different versions of Python, with different versions of scipy, and even different computers may output different curve fit parameters for the same input data. In that case, your own judgement should be used to determine if the output is close enough to be considered accurate.
 - Use the --show option or view the outputted PDF files to visually check the results
+- When using the --show option, the outputed PDF files will actually come out at a lower resolution. This is because the same graph is used for the screen and PDF and the default window resolution for matplotlib is used when outputting to screen.
+- You may notice that some min/max peaks at the start or end of the signal do not get detected. This is normal for two reasons. First, a wavelet not be complete at the beginning or end of the signal, and the peak detection algorithm may ignore it. Second, as the script was written with calcium fluorescence decay as a primary use case, if a min peak is detected at the beginning of a signal or a max peak at the end of a signal, they will be removed as to only focus on complete decaying wavelets.
 - Data that is extremely noisy may still pose problems with analysis. You should expect this if you are unable to see visible peaks in the data manually.
 - If you see that the larger peaks are detected along side very small peaks, test out different --lookahead and --delta parameters
 - The same should be true for if the script is not able to provide the correct ratio. To force the script to invert the ratios, use the --invert option.
-- High precision microscopy instruments can sometimes lose focus or become otherwise uncalibrated over time, due to environmental factors such as temperature or humidity. Use the --limit option to only process a subset of the data.
+- Environmental factors such as temperature or humidity may cause high precision microscopy instruments to lose focus or become otherwise uncalibrated over time. Use the --limit option to only process a subset of the data.
 - Some code is not implemented in the most performant or elegant manner possible. One reason for this is so that is a little easier for those who are new to Python and haven't learned all its powerful capabilities with handling data.
-- Different versions of Python, with different versions of scipy, and even different computers may output different curve fit parameters for the same input data. In that case, your own judgement should be used to determine if the output is close enough to be considered accurate.
+- As previously mentioned, this script has not been tested with Python 3.
 
 ## Special Thanks
 I'd like to thank the following people at the Stanford Cardiovascular Institute who provided data, feedback, and guidance while this script was being written.
