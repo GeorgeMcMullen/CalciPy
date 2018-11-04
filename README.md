@@ -6,7 +6,7 @@ One of the primary challenges in processing ratiometric data is that the two sig
 - Those that can process ratiometric data automatically are limited (e.g. only able to process a single cell line at a time)
 - Finally, they are not widely available, are closed source, or otherwise proprietary limiting the auditability of the experiments
 
-CalciPy's goal is to enable high throughput, yet customizable, processing of ratiometric calcium fluorescence data, in an open and autidible fashion. It can also serve as a starting point for processing data that is exported from microscopy imaging software, such as Nikon's NIS-Elements.
+CalciPy's goal is to enable high throughput, yet customizable, processing of ratiometric calcium fluorescence data, in an open and autidible fashion. It can also serve as a starting point for processing data that is exported from microscopy imaging software, such as Nikon's NIS-Elements. Nikon NIS-Elements is typically used to process images taken from microscopes such as the Nikon Eclipse Ti.
 
 ## Requirements, Dependencies, and Installation
 CalciPy expects that the input file is an Excel file containing ratiometric calcium fluorescent data, which is in the same structure that software packages like Nikon NIS-Elements exports data. See the samples directory for more information.
@@ -147,3 +147,4 @@ I'd like to thank the following people at the Stanford Cardiovascular Institute 
 - Timon Seeger, MD / Postdoctoral Fellow
 - Chi Keung Lam, PhD
 - Ioannis Karakikes, PhD
+- Isaac Perea-Gil, PhD
