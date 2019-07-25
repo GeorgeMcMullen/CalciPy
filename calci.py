@@ -226,7 +226,7 @@ def chooseRatioByTime(dataArray, timeArray):
 # have more data points residing towards the minimum, and less at the maximum.
 # We can use this information to determine which ratio to use.
 #
-# TODO: This function could be refinemd so that it looks at individual sets of wavelets
+# TODO: This function could be refined so that it looks at individual sets of wavelets
 #
 def chooseRatioByAmplitude(dataArray, timeArray):
     # Create an array which will store the ratios between the two
