@@ -658,6 +658,7 @@ argumentParser.add_argument('--xmin', type=float, help='output graph X-axis mini
 
 argumentParser.add_argument('--show', action='store_true', help='show the graph (with matplotlib)')
 
+argumentParser.add_argument('--rawoutput', action='store_true', help='output the raw processed data (for use in other programs)')
 argumentParser.add_argument('--verbose', action='store_true', help='print values as they are calculated')
 
 #
@@ -681,6 +682,9 @@ inputFileNameNoExt = inputFileNameNoExt.replace(".csv","")
 
 # outputCSVFileName: The name of the output CSV file
 outputCSVFileName = os.path.join(outputDirectory,inputFileNameNoExt+'_Processed.csv')
+
+# rawOutputFileName: The name of the output XLSX file
+rawOutputFileName = os.path.join(outputDirectory,inputFileNameNoExt+'_Processed-Raw.xlsx')
 
 worksheetToProcess = commandArguments.sheetname
 worksheetNumToProcess = commandArguments.sheetnum
@@ -736,6 +740,9 @@ if graphXMax is not None and graphXMin is not None and graphXMax <= graphXMin:
 # showGraph: Use matplotlib to display the graphs
 showGraph = commandArguments.show
 
+# rawOutput: Create a file with the raw processed data, for use with other programs
+rawOutput = commandArguments.rawoutput
+
 # printVerbose: Print out values as they are calculated
 printVerbose = commandArguments.verbose
 
@@ -752,6 +759,7 @@ capitalLetters = string.ascii_uppercase
 import math
 import copy
 from openpyxl import load_workbook         # pip install openpyxl
+from openpyxl import Workbook              # pip install openpyxl
 import numpy as numpy
 from scipy.optimize import curve_fit       # pip install scipy
 #from peakdetect import peakdetect          # https://gist.github.com/sixtenbe/1178136
@@ -811,6 +819,14 @@ outputCSVFile.write('Curve Fit Decay Time 36%,')
 outputCSVFile.write('Curve Fit Decay Value 36%,')
 outputCSVFile.write('\n')
 
+# Create a new Excel file for the raw output, if needed
+if rawOutput == True:
+   rawOutputWorkbook = Workbook()
+   sheetToDelete = rawOutputWorkbook.active
+   #for sheetToDelete in sheetsToDelete:
+       #deleteDefaultSheet=rawOutputWorkbook['Sheet1']
+   rawOutputWorkbook.remove(sheetToDelete)
+   
 # Loop through the worksheets in the given Excel file and process them
 for workSheetName in allWorkSheetNames:
     # Load the Excel work sheet
@@ -831,6 +847,19 @@ for workSheetName in allWorkSheetNames:
     # Just limit the number of columns to the P column
     if (workSheetMaxColumn > 16):
         workSheetMaxColumn=16
+
+    # Create a new worksheet and fill the headers with the headers of the original sheet
+    if rawOutput == True:
+       rawOutputWorksheet = rawOutputWorkbook.create_sheet(title=workSheetName)
+       _ = rawOutputWorksheet.cell(column=1, row=1, value=workSheet["B1"].value)
+       for i in range(5,workSheetMaxColumn-1):
+           _ = rawOutputWorksheet.cell(column=((i-5)*5)+2, row=1, value=workSheet[capitalLetters[i] + "1"].value+' Ratio')
+           _ = rawOutputWorksheet.cell(column=((i-5)*5)+3, row=1, value="Max")
+           _ = rawOutputWorksheet.cell(column=((i-5)*5)+4, row=1, value="Min")
+           _ = rawOutputWorksheet.cell(column=((i-5)*5)+5, row=1, value="Decay")
+           _ = rawOutputWorksheet.cell(column=((i-5)*5)+6, row=1, value="Tau")
+
+
 
     # Create array for the data. The typical sheet in the Excel file has
     # one header row and five columns of additional informaion like time.
@@ -879,6 +908,14 @@ for workSheetName in allWorkSheetNames:
     # Otherwise calculations for BPM, tau, rise time, etc. will be off.
     timeArray = timeArray[::2]
     timeArray = timeArray.flatten()
+
+    #
+    # Output the time array
+    #
+    if rawOutput == True:
+       for timeIndex in range(0, len(timeArray)):
+           _ = rawOutputWorksheet.cell(column=1, row=timeIndex+2, value=timeArray[timeIndex])
+
 
     if columnToProcess is None:
        columnsToProcess = range(dataArray.shape[1])
@@ -1048,6 +1085,27 @@ for workSheetName in allWorkSheetNames:
         outputCSVFile.write(str(tauValueArray[:currentRangeLimit].mean()) + ', ')
         outputCSVFile.write('\n')
 
+        #
+        # Output raw processed data
+        #
+        if rawOutput == True:
+           for ratioIndex in range(0, len(ratioArray)):
+               _ = rawOutputWorksheet.cell(column=(i*5)+2, row=ratioIndex+2, value=ratioArray[ratioIndex])
+               _ = rawOutputWorksheet.cell(column=(i*5)+5, row=ratioIndex+2, value=decayCurveData[ratioIndex])
+
+           # Peak maximum data points as yellow dots
+           for maximum in maxima:
+               _ = rawOutputWorksheet.cell(column=(i*5)+3, row=int(maximum)+2, value=ratioArray[int(maximum)])
+
+           # Peak minimum data points as green dots
+           for minimum in minima:
+               _ = rawOutputWorksheet.cell(column=(i*5)+4, row=int(minimum)+2, value=ratioArray[int(minimum)])
+
+           # Marker for where the fit curve hits 1/e
+           for tauMarker in tauMarkerArray:
+               _ = rawOutputWorksheet.cell(column=(i*5)+6, row=int(tauMarker)+2, value=decayCurveData[int(tauMarker)])
+
+ 
     #
     # Finished processing worksheet
     #
@@ -1069,3 +1127,7 @@ for workSheetName in allWorkSheetNames:
     pyplot.close('all')
 
 outputCSVFile.close()
+
+# Close the raw output file
+if rawOutput == True:
+   rawOutputWorkbook.save(filename = rawOutputFileName)
