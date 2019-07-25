@@ -54,7 +54,7 @@ Below is a full list of all the command line arguments that can be used.
                     [--delta DELTA] [--invert] [--ratioby {time,amplitude}]
                     [--decaystart DECAYSTART] [--decayend DECAYEND] [--bounds]
                     [--limit LIMIT] [--ymax YMAX] [--ymin YMIN] [--xmax XMAX]
-                    [--xmin XMIN] [--show] [--verbose]
+                    [--xmin XMIN] [--show] [--rawoutput] [--verbose]
                     filename
     
     Process ratiometric calcium fluorescence decay data.
@@ -93,7 +93,10 @@ Below is a full list of all the command line arguments that can be used.
       --xmax XMAX           output graph X-axis maximum
       --xmin XMIN           output graph X-axis minimum
       --show                show the graph (with matplotlib)
+      --rawoutput           output the raw processed data (for use in other
+                            programs)
       --verbose             print values as they are calculated
+
 
 ## Methods
 Raw data is exported from software such as Nikon NIS-Elements into an Excel compatible file. See the samples directory for an example data set and format. As mentioned, the two signals which make up the ratiometric data are actually captured separately, represented as interlaced rows in a single dataset, and it is not defined which set of interlaced rows corresponds to what part of the ratio.
