@@ -167,7 +167,9 @@ def getDecayTimes(timeArray, minima, maxima):
 # argument. It will merely call the other functions.
 #
 def chooseRatio(dataArray, timeArray):
-    if chooseRatioBy == 'time':
+    if chooseRatioBy == 'none':
+       return dataArray
+    elif chooseRatioBy == 'time':
        return chooseRatioByTime(dataArray, timeArray)
     else:
        return chooseRatioByAmplitude(dataArray, timeArray)
@@ -641,7 +643,7 @@ argumentParser.add_argument('--lookahead', type=positiveInteger, default=30, hel
 argumentParser.add_argument('--delta',     type=positiveFloat, default=0.0,  help='peak detection delta parameter (default=0)')
 
 argumentParser.add_argument('--invert', action='store_true', help='invert the waveform (special cases only)')
-argumentParser.add_argument('--ratioby', choices=['time', 'amplitude'], default='time',  help='method for choosing which ratio to use')
+argumentParser.add_argument('--ratioby', choices=['time', 'amplitude', 'none'], default='time',  help='method for choosing which ratio to use')
 
 argumentParser.add_argument('--decaystart', type=floatInRange, default=1.0, help='the relative amplitude from the peak where the analysis will start')
 argumentParser.add_argument('--decayend',   type=floatInRange, default=0.0, help='the relative amplitude from the peak where the analysis will end')
@@ -906,7 +908,8 @@ for workSheetName in allWorkSheetNames:
     # Once we choose the proper ratios, the size of the working data will be half as tall,
     # we also need to do the same with the time array as they should be the same size.
     # Otherwise calculations for BPM, tau, rise time, etc. will be off.
-    timeArray = timeArray[::2]
+    if chooseRatioBy != 'none':
+       timeArray = timeArray[::2]
     timeArray = timeArray.flatten()
 
     #
